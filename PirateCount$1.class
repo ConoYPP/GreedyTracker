@@ -1,0 +1,8 @@
+import java.util.ArrayList;
+import java.util.Comparator;
+
+class null implements Comparator<String> {
+  public int compare(String a, String b) {
+    return ((ArrayList)PirateCount.this.theCount.get(b)).size() - ((ArrayList)PirateCount.this.theCount.get(a)).size();
+  }
+}
