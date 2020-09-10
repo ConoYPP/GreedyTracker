@@ -1,0 +1,69 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import javax.swing.AbstractListModel;
+
+public class PirateCount extends AbstractListModel<String> {
+  HashMap<String, ArrayList<String>> theCount = new HashMap<>();
+  
+  ArrayList<String> order = new ArrayList<>();
+  
+  public void reset() {
+    this.theCount.clear();
+    this.order.clear();
+    fireContentsChanged(this, 0, this.order.size());
+  }
+  
+  public void add(String pirate, String victim) {
+    if (!this.theCount.containsKey(pirate)) {
+      this.theCount.put(pirate, new ArrayList<>());
+      this.order.add(pirate);
+    } 
+    ((ArrayList<String>)this.theCount.get(pirate)).add(victim);
+    Collections.sort(this.order, new Comparator<String>() {
+          public int compare(String a, String b) {
+            return ((ArrayList)PirateCount.this.theCount.get(b)).size() - ((ArrayList)PirateCount.this.theCount.get(a)).size();
+          }
+        });
+    fireContentsChanged(this, 0, this.order.size());
+  }
+  
+  public String merge(PirateCount other, String rhythm) {
+    int count = 0;
+    for (String pirate : this.order) {
+      for (String victim : this.theCount.get(pirate)) {
+        System.err.println("  *** " + pirate + " beat " + victim);
+        other.add(pirate, victim);
+        count++;
+      } 
+    } 
+    if (rhythm.length() > 0)
+      rhythm = String.valueOf(rhythm) + "-"; 
+    rhythm = String.valueOf(rhythm) + count;
+    reset();
+    return rhythm;
+  }
+  
+  public String getElementAt(int index) {
+    return String.format("%-15s%3s", new Object[] { this.order.get(index), Integer.valueOf(((ArrayList)this.theCount.get(this.order.get(index))).size()) });
+  }
+  
+  public int getSize() {
+    return this.order.size();
+  }
+  
+  public int getTotal() {
+    int count = 0;
+    for (String pirate : this.order)
+      count += ((ArrayList)this.theCount.get(pirate)).size(); 
+    return count;
+  }
+  
+  public String getPirateTotals() {
+    StringBuilder sb = new StringBuilder("Totals:\n");
+    for (int i = 0; i < getSize(); i++)
+      sb.append(String.valueOf(getElementAt(i)) + "\n"); 
+    return sb.toString();
+  }
+}
