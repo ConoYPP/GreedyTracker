@@ -1,0 +1,41 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
+class null extends Thread {
+  public void run() {
+    GreedieTrack.this.haltLoop = false;
+    GreedieTrack.this.updateTime.start();
+    long offset = GreedieTrack.this.chatFile.length();
+    while (!GreedieTrack.this.haltLoop) {
+      while (GreedieTrack.this.chatFile.length() == offset) {
+        try {
+          Thread.sleep(500L);
+        } catch (InterruptedException interruptedException) {}
+      } 
+      try {
+        RandomAccessFile raf = new RandomAccessFile(GreedieTrack.this.chatFile, "r");
+        raf.seek(offset);
+        StringBuilder sb = new StringBuilder();
+        while (offset < raf.length()) {
+          offset++;
+          sb.append((char)raf.read());
+        } 
+        raf.close();
+        System.out.print(sb.toString());
+        byte b;
+        int i;
+        String[] arrayOfString;
+        for (i = (arrayOfString = sb.toString().split("\n")).length, b = 0; b < i; ) {
+          String msg = arrayOfString[b];
+          GreedieTrack.this.process(msg);
+          b++;
+        } 
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
+      } 
+    } 
+  }
+}
