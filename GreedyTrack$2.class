@@ -1,0 +1,25 @@
+class null extends Thread {
+  public void run() {
+    while (!GreedieTrack.this.haltLoop) {
+      try {
+        Thread.sleep(1000L);
+      } catch (InterruptedException interruptedException) {}
+      if (!GreedieTrack.this.haltLoop) {
+        switch (GreedieTrack.this.status) {
+          case 1:
+            GreedieTrack.this.sailingTime++;
+            break;
+          case 2:
+            GreedieTrack.this.battleTime++;
+            break;
+          case 3:
+            GreedieTrack.this.frayTime++;
+            break;
+        } 
+        GreedieTrack.this.sailingTimeLabel.setText(GreedieTrack.access$0(GreedieTrack.this.sailingTime));
+        GreedieTrack.this.battleTimeLabel.setText(GreedieTrack.access$0(GreedieTrack.this.battleTime));
+        GreedieTrack.this.frayTimeLabel.setText(GreedieTrack.access$0(GreedieTrack.this.frayTime));
+      } 
+    } 
+  }
+}
